@@ -5,8 +5,8 @@ Download And Test
 
     go get github.com/dotqin/blfgo
 
-    blf new testapp
+    blf new myapp
 
-    cd testapp && blf run
+    cd myapp && blf run
 
 在浏览器中打开 localhost:8080
