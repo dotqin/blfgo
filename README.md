@@ -8,5 +8,5 @@ Download And Test
     blf new testapp
 
     cd testapp && blf run
-    
-    在浏览器中打开 localhost:8080
+
+在浏览器中打开 localhost:8080
