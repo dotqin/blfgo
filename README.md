@@ -9,4 +9,4 @@ Download And Test
 
     cd myapp && blf run
 
-在浏览器中打开 localhost:8080
+在浏览器中打开 localhost:8080/?name=world
