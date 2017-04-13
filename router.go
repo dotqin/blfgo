@@ -16,33 +16,49 @@ package blfgo
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
 	"net/url"
 	"reflect"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/gorilla/sessions"
+	"github.com/satori/go.uuid"
 )
 
 type BlfHandler struct {
 }
 
 type BlfRouter interface {
-	Route(req *http.Request) (re string, tp int)
+	Route(w http.ResponseWriter, req *http.Request, s *sessions.Session) (re string, tp int, date map[string]interface{})
 }
 
 var Router BlfRouter
 
+var store = sessions.NewCookieStore([]byte(fmt.Sprintf("%s", uuid.NewV4())))
+
 func (h *BlfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
-	re, tp := Router.Route(req)
+	session, _ := store.Get(req, "default")
+
+	re, tp, data := Router.Route(w, req, session)
+
+	session.Save(req, w)
+
 	switch tp {
 	case 0:
-		fmt.Fprint(w, re) // ResponseBody
+		t, _ := template.ParseFiles(fmt.Sprintf("views/%s", re))
+		t.Execute(w, data) // TODO 返回视图
 	case 1:
-		fmt.Fprint(w, re) // TODO 返回视图
+		fmt.Fprint(w, re) // ResponseBody
 	case 2:
-		fmt.Fprint(w, re) // TODO 跳转URL
+		http.Redirect(w, req, re, http.StatusFound) // TODO 跳转URL 未完善
+	case 9:
+		// 拦截器返回flase
+	case 404:
+		fmt.Fprint(w, "404") // TODO 404
 	}
 	return
 }

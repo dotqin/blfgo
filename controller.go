@@ -14,4 +14,24 @@
 
 package blfgo
 
-type Controller struct{}
+import (
+	"net/http"
+
+	"github.com/gorilla/sessions"
+)
+
+type Controller struct {
+	Url            string
+	Method         string
+	Flag           int
+	Csrf           bool
+	CustomArgs     map[string]string
+	ResponseWriter http.ResponseWriter
+	Request        *http.Request
+	Session        *sessions.Session
+	Data           map[string]interface{}
+}
+
+func (c *Controller) Prepare() {
+
+}
